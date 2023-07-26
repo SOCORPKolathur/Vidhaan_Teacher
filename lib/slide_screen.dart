@@ -36,7 +36,7 @@ class _SlidepageState extends State<Slidepage> {
               style: GoogleFonts.montserrat(
 
               color: Colors.black,
-              fontWeight: FontWeight.bold,fontSize: 34
+              fontWeight: FontWeight.w700,fontSize: 30
 
 
             ),),
@@ -45,7 +45,7 @@ class _SlidepageState extends State<Slidepage> {
             Text("To Your Desire",style: GoogleFonts.montserrat(
 
                 color: Colors.grey,
-                fontWeight: FontWeight.w500,fontSize: 20
+                fontWeight: FontWeight.w500,fontSize: 18
 
 
             ),),
@@ -57,6 +57,8 @@ class _SlidepageState extends State<Slidepage> {
 
       floatingActionButton:  FloatingActionButton(
           backgroundColor: Color(0xff196EEF),
+          elevation: 10,
+          splashColor: Colors.white,
           onPressed: (){
            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Accountpage()));
           },

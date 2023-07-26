@@ -1,288 +1,1251 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:InvestinShare/Homeland.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:shimmer_animation/shimmer_animation.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'Profile_More_Page.dart';
+import 'Today Presents_Page.dart';
+import 'demo.dart';
 
 
-
-class profile extends StatefulWidget {
-
-
+class Profile extends StatefulWidget {
+  const Profile({Key? key}) : super(key: key);
 
   @override
-  State<profile> createState() => _profileState();
+  State<Profile> createState() => _ProfileState();
 }
 
-class _profileState extends State<profile> {
-  FirebaseAuth auth = FirebaseAuth.instance;
+class _ProfileState extends State<Profile> {
 
-  TextEditingController field1 = TextEditingController();
-  TextEditingController field2 = TextEditingController();
-  TextEditingController field3 = TextEditingController();
+  String staffid="";
+  String staffname="";
+  String staffregno="";
+
+  getstaffdetails() async {
+    var document = await FirebaseFirestore.instance.collection("Staffs").get();
+    for(int i=0;i<document.docs.length;i++){
+      if(document.docs[i]["userid"]==FirebaseAuth.instance.currentUser!.uid){
+        setState(() {
+          staffid=document.docs[i].id.toString();
+        });
+      }
+      if(staffid.isNotEmpty){
+        var staffdocument= await FirebaseFirestore.instance.collection("Staffs").doc(staffid).get();
+        Map<String,dynamic>?staffvalue=staffdocument.data();
+        setState(() {
+          staffname=staffvalue!['stname'].toString();
+          staffregno=staffvalue['regno'].toString();
+
+        });
+      }
+    }
+
+  }
+
+
+
+
   @override
   void initState() {
-    getdata();
+    getstaffdetails();
     // TODO: implement initState
     super.initState();
   }
-  String name="";
-  String phone="";
-  String email="";
+
+  int selectedMenu=0;
 
   @override
-  getdata() async {
-    var document = await FirebaseFirestore.instance.collection('User').doc(auth.currentUser!.uid).get();
-    Map<String, dynamic>? value = document.data();
-
-    setState(() {
-      field1.text = value!['name'].toString();
-      field2.text = value['number'].toString();
-      field3.text = value['email'].toString();
-      name = value['name'].toString();
-      phone = value['number'].toString();
-
-    });
-  }
-
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-    Future <void> show()  async  {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Profile Updated'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children:  <Widget>[
-                Container(
-                    width: 100,
-                    height: 100,
-                    child: Lottie.asset('lib/assets/done.json')),
-
-              ],
-            ),
-          ),
-          actions: <Widget>[
-
-            TextButton(
-              child: const Text('OK', style: TextStyle(color: Colors.blue),),
-              onPressed: () {
-                Navigator.pop(context);
-
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-   uploadFile() async {
-    await _firestore
-        .collection('User').doc(auth.currentUser!.uid)
-        .update({
-      'name':field1.text,
-      'phone':field2.text,
-      'email':field3.text,
-
-    });
-  }
-
   Widget build(BuildContext context) {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    double height=MediaQuery.of(context).size.height;
-    double width=MediaQuery.of(context).size.width;
-
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
+      body:
+      FutureBuilder<dynamic>(
+        future: FirebaseFirestore.instance.collection("Staffs").doc(staffid.toString()).get(),
+        builder:(context , value) {
 
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Color(0xff3D8CF8),
-        title:  Row(
+          if(value.hasData==null){
+            return Center(child: CircularProgressIndicator(
+              color: Color(0xff0873c4),
+            ));
+          }
+          if(!value.hasData){
+            return Center(child: CircularProgressIndicator(
+              color: Color(0xff0873c4),
+            ));
+          }
 
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: width/49),
-              child:
+          var y1 = value.data.data!();
+          return Stack(
+            children: [
+
+              SingleChildScrollView(
+                physics: const ScrollPhysics(),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top:height/2.2009),
+                      child: Column(
+                        children: [
+
+                          Container(
+                            margin: EdgeInsets.only(left: width / 36,
+                                right: width / 36,
+                                top: height / 930),
+                            height: height / 4.0,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    spreadRadius: 1.0,
+
+                                    offset: Offset(0, 0.5),
+                                    color: Colors.black12,
+                                    blurRadius: 2.0,
+
+                                  ),
+
+                                ]
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height:height/75.6),
+                                Padding(
+                                  padding:  EdgeInsets.only(left:width/36.0),
+                                  child: Text("User Details", style: GoogleFonts.poppins(
+                                      color: Colors.black,
+                                      fontSize:width/24,
+                                      fontWeight: FontWeight.w500
+
+                                  ),),
+                                ),
+                                SizedBox(height:height/75.6),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.phone, color: Colors.black,
+                                        size: 20,),
+
+                                      SizedBox(width: width / 22,),
+
+                                      Text(y1["mobile"].toString(),
+                                        style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.email_outlined, color: Colors.black,
+                                        size: 20,),
+
+                                      SizedBox(width: width / 22,),
+
+                                      Text(
+                                        y1["email"].toString(), style: GoogleFonts.poppins(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500
+
+                                      ),),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.date_range_outlined, color: Colors.black,
+                                        size: 20,),
+                                      SizedBox(width: width / 22,),
+
+                                      Text( y1["entrydate"].toString(), style: GoogleFonts.poppins(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500
+
+                                      ),),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.bloodtype, color: Colors.black,
+                                        size: 20,),
+                                      SizedBox(width: width / 22,),
+
+                                      Text( y1["bloodgroup"].toString(), style: GoogleFonts.poppins(
+                                          color: Colors.black,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500
+
+                                      ),),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+
+
+                          //personal information
+
+                          Container(
+                            margin: EdgeInsets.only(left: width / 36,
+                                right: width / 36,
+                                top: height / 37.8),
+
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    spreadRadius: 1.0,
+
+                                    offset: Offset(0, 0.5),
+                                    color: Colors.black12,
+                                    blurRadius: 2.0,
+
+                                  ),
+
+                                ]
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height:height/75.6),
+                                Padding(
+                                  padding:  EdgeInsets.only(left:width/36.0),
+                                  child: Text("Personal Information", style: GoogleFonts.poppins(
+                                      color: Colors.black,
+                                      fontSize:width/24,
+                                      fontWeight: FontWeight.w500
+
+                                  ),),
+                                ),
+                                SizedBox(height:height/75.6),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child:
+                                  y1['Maritalstatus']=="Married"?
+                                  Row(
+                                    children: [
+
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Spouse Name ", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["Spousename"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ):
+                                  Row(
+                                    children: [
+
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Father Name ", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["fathername"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Spouse Phone  ", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["Spousephone"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Spouse Email ", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["Spouseemail"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Spouse Aadhaar No ", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["Spouseaadhaar"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Spouse Office ", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["Spouseoffice"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Seminar/Workshop", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["Seminar/Workshop"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Subject", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["Subject"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("School Last", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["School Last"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Specialisation", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["Specialisation"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Present Salary", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["Present Salary"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Salary Expected", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["Salary Expected"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Work Experience", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["Work Experience"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Language Known", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["Language Known"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Absent Days", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["absentdays"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Gender", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["gender"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("DOB", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["dob"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Community", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["community"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Religion", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["religion"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Aadhaar No", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["aadhaarno"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Reg No", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["regno"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Incharge", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["incharge"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Incharge Section", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["inchargesec"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+                                        child: Text("Married Status", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["Maritalstatus"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: width / 25, right: width / 45,
+                                      top: height / 94.5, bottom: height / 94.5),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width:width/3.60,
+
+                                        child: Text("Address", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                      SizedBox(
+                                        width:width/1.714,
+
+                                        child: Text(": ${y1["address"].toString()}", style: GoogleFonts.poppins(
+                                            color: Colors.black,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500
+
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                SizedBox(height:height / 84.5),
+                                Row(
+                                 mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+
+                                    GestureDetector(
+                                      onTap:(){
+                                        launch("mailto:socorpkolathur@gmail.com");
+                                      },
+                                      child: Container(
+                                        height: height / 20.9,
+                                        width: width / 2.5,
+                                        margin: EdgeInsets.only(right: width / 36),
+                                        decoration: BoxDecoration(
+                                          color: Color(0xff3D8CF8),
+                                          borderRadius: BorderRadius.circular(5),
+
+                                        ),
+                                        child: Center(
+                                          child: Text("Request For Edit",
+                                            style: GoogleFonts.poppins(
+                                                color: Colors.white,
+                                                fontSize:width/24,
+                                                fontWeight: FontWeight.bold
+
+                                            ),),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height:height / 84.5)
+
+
+
+
+
+
+
+
+
+                              ],
+                            ),
+                          ),
+                          SizedBox(height:height / 84.5)
+
+                        ],
+                      ),
+                    ),
+
+                  ]
+                ),
+
+              ),
+
               Container(
-                child: GestureDetector(
-                    onTap: (){
-                      Navigator.of(context).pop();
-                    },
-                    child:const Icon(Icons.arrow_back_ios_new_rounded,color: Colors.white,)
-                ),
-              ),
-            ),
-
-            Padding(
-              padding: EdgeInsets.only(top:height/151.8,left:width/39.2,bottom:height/151.8),
-              child: Container(
-
-                height:height/25,
-                child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: Text("Edit Profile",
-                    style: GoogleFonts.poppins(color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),),
-                ),
-              ),
-            ),
-
-
-          ],
-        ),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(top:height/151.8,left:width/39.2,bottom:height/151.8),
-            child: TextButton(
-              onPressed: (){
-                uploadFile();
-                show();
-              },
-              child: Container(
-                height: height/33,
-                child: FittedBox(
-                  fit: BoxFit.contain,
-                  child: Text("Done",
-                    style: GoogleFonts.poppins(color:Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),),
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
-
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-
-            Container(
-                width: width/1.96,
-                height:height/4.21,
-                child: Lottie.asset('assets/profile.json')),
-
-            Container(
-              height:height/23,
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: Text(name,style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xff484545)
-                ),),
-              ),
-            ),
-            //
-            Container(
-              height:height/32,
-              child: FittedBox(
-                fit: BoxFit.contain,
-                child: Text('+91 ${phone}',
-                  style: GoogleFonts.poppins(
-                    color: const Color(0xff484545),
-                    fontSize: 15,),),
-              ),
-            ),
-            //
-            Container(
-              width:width/0.98,
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0xffF9F9F9),
-                      Color(0xffffffff),
-                    ],)),
-
-
-            ),
-
-            Column(
-              children: [
-                Padding(
-                  padding:EdgeInsets.symmetric(horizontal:width/14,vertical:height/94.87),
-                  child:
-                  TextField(
-                    controller: field1,
-                    cursorColor: const Color(0xff4169E1),
-
-                    decoration: InputDecoration(
-
-                        suffixIcon: IconButton(onPressed: (){}, icon: const Icon(Icons.person)),
-                        hintText: '',
-                        labelText: "Name"
-
-
-                    ),
+                  height: height/2.2909,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                          image: AssetImage("assets/Rectangle.png")
+                      )
                   ),
-                ),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        child: Stack(
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+
+                                  Row(
+
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: height / 9.745, left: width / 12.4),
+                                        child: CircleAvatar(
+                                          radius: 64,
+                                          backgroundColor: Colors.grey.shade200,
+                                          backgroundImage:  NetworkImage(
+                                              y1['imgUrl'].toString()
+                                          ),
+                                        ),
+                                      ),
+
+                                      Padding(
+                                        padding:  EdgeInsets.only(top:height/7.56,left: width/5.142),
+                                        child: SizedBox(
+                                          child: CircularPercentIndicator(
+                                              radius: 55,
+                                              lineWidth: 12.0,
+                                              percent: 1,
+                                              center:  Text("20",
+                                                  style: GoogleFonts.montserrat(
+                                                      fontSize: width/13,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.yellow)),
+                                              linearGradient: const LinearGradient(begin: Alignment.topRight,
+                                                  end: Alignment.bottomLeft,
+                                                  colors: <Color>[
+                                                    Colors.yellowAccent,
+                                                    Colors.yellow
+                                                  ]),
+                                              rotateLinearGradient: true,
+                                              circularStrokeCap: CircularStrokeCap.round),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                  const SizedBox(height: 5,),
+
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(left: width / 12),
+                                            child: Text(
+                                              y1["stname"].toString(), style: GoogleFonts.poppins(
+                                                color: Colors.white,
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold
+
+                                            ),),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(left: width / 12),
+                                            child: Text("ID : ${y1["regno"].toString()}",
+                                              style: GoogleFonts.poppins(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500
+
+                                              ),),
+                                          )
+                                        ],
+                                      ),
+                                      GestureDetector(
+                                        onTap:(){
+                                          Navigator.of(context).push(MaterialPageRoute(builder: (context) =>Today_Presents_Page(y1["stname"],y1["regno"]) ,));
+                                        },
+                                        child: Container(
+                                          height: height / 18.9,
+                                          width: width / 2.168,
+                                          margin: EdgeInsets.only(right: width / 36),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(20),
+
+                                          ),
+                                          child: Center(
+                                            child: Text("Today Presence",
+                                              style: GoogleFonts.poppins(
+                                                  color: Colors.blue,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold
+
+                                              ),),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
 
 
-                Padding(
-                  padding:EdgeInsets.symmetric(horizontal:width/14,vertical:height/94.87),
-                  child: TextField(
-                    controller: field2,
-                    cursorColor: const Color(0xff4169E1),
+                                ],
+                              ),
 
-                    decoration: InputDecoration(
+                              Positioned(
+                                bottom: height / 15.45, left: width / 3.6,
+                                child: const CircleAvatar(
+                                    radius: 24,
+                                    backgroundColor: Colors.white,
+                                    child: Icon(Icons.create_outlined,
+                                      color: Colors.black, size: 26,)
+                                ),
+                              )
 
-                        suffixIcon: IconButton(onPressed: (){}, icon: const Icon(Icons.mail)),
-                        hintText: '',
-                        labelText: "Phone"
+                            ]
+                        ),
+                      ),
 
+                    ],
+                  )),
 
+              Padding(
+                padding:  EdgeInsets.only(left:width/1.161,top:height/21.6),
+                child: PopupMenuButton(
+                  position: PopupMenuPosition.under,
+                  initialValue: selectedMenu,
+                  color: Colors.white,
+                  tooltip: "More",
+                  // Callback that sets the selected popup menu item.
+                  onSelected: (item) {
+                    setState(() {
+                      selectedMenu = item;
+                    });
+                    print(selectedMenu);
+
+                    if(selectedMenu==1){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => More_Menu_Page(),));
+                    }
+                    if(selectedMenu==2){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => More_Menu_Page(),));
+                    }
+                    if(selectedMenu==3){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => More_Menu_Page(),));
+                    }
+
+                  },
+                  itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                    const PopupMenuItem(
+                      value: 1,
+                      child: Text('Today Presents'),
                     ),
-                  ),
-                ),
-
-
-                Padding(
-                  padding:EdgeInsets.symmetric(horizontal:width/14,vertical:height/94.87),
-                  child: TextField(
-                    controller: field3,
-                    cursorColor: const Color(0xff4169E1),
-
-                    decoration: InputDecoration(
-
-                        suffixIcon: IconButton(onPressed: (){}, icon: const Icon(Icons.phone)),
-                        hintText: '',
-                        labelText: "E Mail "
-
-
+                    const PopupMenuItem(
+                      value: 2,
+                      child: Text('Today Absents'),
                     ),
-                  ),
+                    const PopupMenuItem(
+                      value: 3,
+                      child: Text('HR(Pay roll)'),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
 
-            Padding(
-              padding:EdgeInsets.only(top:height/5),
-              child:  Container(
-                  height:height/33,
-                  child: FittedBox(
-                      fit: BoxFit.contain,
-                      child: Text('Vidhaan Teachers',style: TextStyle(
-                          color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25
-                      ),))),
-            )
-          ],
-        ),
-      ),
+
+            ],
+          );
+
+
+        } ),
+
     );
-
-
-
   }
-
-
-
 }
