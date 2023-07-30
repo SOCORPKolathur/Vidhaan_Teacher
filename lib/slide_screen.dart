@@ -56,7 +56,7 @@ class _SlidepageState extends State<Slidepage> {
 
 
       floatingActionButton:  FloatingActionButton(
-          backgroundColor: Color(0xff196EEF),
+          backgroundColor: Color(0xff0873C4),
           elevation: 10,
           splashColor: Colors.white,
           onPressed: (){

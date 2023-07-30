@@ -9,6 +9,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:vidhaan_teacher_dart/excel.sheet.dart';
 import 'const_file.dart';
 import 'package:vidhaan_teacher_dart/profile_page.dart';
@@ -286,7 +287,7 @@ class _HomepageState extends State<Homepage> {
 
       return Scaffold(
 
-        backgroundColor: Color(0xff196EEF),
+        backgroundColor: Color(0xff0873C4),
 
         body:
         selectedIndexvalue == 0 ?
@@ -294,7 +295,9 @@ class _HomepageState extends State<Homepage> {
         selectedIndexvalue == 1 ?
         Container(color: Colors.white,) :
         selectedIndexvalue == 2 ?
-        Excelsheet() :
+        Container(
+            color: Colors.white,
+            child: Center(child:Lottie.asset('assets/empty loader.json'),)):
         selectedIndexvalue == 3 ?
         Profile() :
         SizedBox(),
@@ -326,7 +329,7 @@ class _HomepageState extends State<Homepage> {
               child:
 
               GNav(
-                  backgroundColor: Color(0xff196EEF),
+                  backgroundColor: Color(0xff0873C4),
                   haptic: true,
                   tabBorderRadius: 18,
                   curve: Curves.easeIn,

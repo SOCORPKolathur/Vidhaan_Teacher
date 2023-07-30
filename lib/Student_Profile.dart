@@ -9,6 +9,8 @@ import 'Profile_More_Page.dart';
 import 'Today Presents_Page.dart';
 
 class Student_Profile extends StatefulWidget {
+String ?stuid;
+Student_Profile(this.stuid);
 
   @override
   State<Student_Profile> createState() => _Student_ProfileState();
@@ -17,21 +19,12 @@ class Student_Profile extends StatefulWidget {
 class _Student_ProfileState extends State<Student_Profile> {
   int selectedMenu=0;
 
-  String stuid='';
   String stuname='';
   String sturegno='';
   String stuimg='';
 
   getstaffdetails() async {
-    var document = await FirebaseFirestore.instance.collection("Students").get();
-    for(int i=0;i<document.docs.length;i++){
-      if(document.docs[i]["userid"]==FirebaseAuth.instance.currentUser!.uid){
-        setState(() {
-          stuid=document.docs[i].id;
-        });
-      }
-    };
-    var document2 =  await FirebaseFirestore.instance.collection("Students").doc(stuid).get();
+    var document2 =  await FirebaseFirestore.instance.collection("Students").doc(widget.stuid).get();
     Map<String,dynamic>? value = document2.data();
     setState(() {
       stuname=value!["stname"];
@@ -49,10 +42,9 @@ class _Student_ProfileState extends State<Student_Profile> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      body:
-      FutureBuilder<dynamic>(
-          future: FirebaseFirestore.instance.collection("Students").doc(stuid).get(),
+    return
+      Scaffold(body: FutureBuilder<dynamic>(
+          future: FirebaseFirestore.instance.collection("Students").doc(widget.stuid).get(),
           builder:(context , value) {
 
             if(value.hasData==null){
@@ -74,6 +66,7 @@ class _Student_ProfileState extends State<Student_Profile> {
                   physics: const ScrollPhysics(),
                   child: Column(
                       children: [
+
                         Padding(
                           padding: EdgeInsets.only(top:height/2.2009),
                           child: Column(
@@ -1399,7 +1392,7 @@ class _Student_ProfileState extends State<Student_Profile> {
                     decoration: const BoxDecoration(
                         image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: AssetImage("assets/Rectangle.png")
+                            image: AssetImage("assets/profile back.jpeg")
                         )
                     ),
                     child: Column(
@@ -1425,29 +1418,6 @@ class _Student_ProfileState extends State<Student_Profile> {
                                             ),
                                           ),
                                         ),
-
-                                        Padding(
-                                          padding:  EdgeInsets.only(top:height/7.56,left: width/5.142),
-                                          child: SizedBox(
-                                            child: CircularPercentIndicator(
-                                                radius: 55,
-                                                lineWidth: 12.0,
-                                                percent: 1,
-                                                center:  Text("20",
-                                                    style: GoogleFonts.montserrat(
-                                                        fontSize: width/13,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: Colors.yellow)),
-                                                linearGradient: const LinearGradient(begin: Alignment.topRight,
-                                                    end: Alignment.bottomLeft,
-                                                    colors: <Color>[
-                                                      Colors.yellowAccent,
-                                                      Colors.yellow
-                                                    ]),
-                                                rotateLinearGradient: true,
-                                                circularStrokeCap: CircularStrokeCap.round),
-                                          ),
-                                        ),
                                       ],
                                     ),
 
@@ -1461,7 +1431,8 @@ class _Student_ProfileState extends State<Student_Profile> {
                                           children: [
                                             Padding(
                                               padding: EdgeInsets.only(left: width / 12),
-                                              child: Text(
+                                              child:
+                                              Text(
                                                 y1["stname"], style: GoogleFonts.poppins(
                                                   color: Colors.white,
                                                   fontSize: 22,
@@ -1481,30 +1452,7 @@ class _Student_ProfileState extends State<Student_Profile> {
                                             )
                                           ],
                                         ),
-                                        GestureDetector(
-                                          onTap:(){
-                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) =>Today_Presents_Page( y1["stname"],y1["regno"]) ,));
-                                          },
-                                          child: Container(
-                                            height: height / 18.9,
-                                            width: width / 2.168,
-                                            margin: EdgeInsets.only(right: width / 36),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.circular(20),
 
-                                            ),
-                                            child: Center(
-                                              child: Text("Today Presence",
-                                                style: GoogleFonts.poppins(
-                                                    color: Colors.blue,
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold
-
-                                                ),),
-                                            ),
-                                          ),
-                                        )
                                       ],
                                     ),
 
@@ -1529,7 +1477,7 @@ class _Student_ProfileState extends State<Student_Profile> {
                       ],
                     )),
 
-                Padding(
+              /*  Padding(
                   padding:  EdgeInsets.only(left:width/1.161,top:height/21.6),
                   child: PopupMenuButton(
                     position: PopupMenuPosition.under,
@@ -1569,15 +1517,57 @@ class _Student_ProfileState extends State<Student_Profile> {
                       ),
                     ],
                   ),
-                ),
+                ),*/
+
+                Padding(
+                  padding:  EdgeInsets.only(left:170,top:100),
+                  child: Container(
+                      height:100,
+                      width:220,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(100),
+                            bottomLeft: Radius.circular(100),
+                          ),
+                          color:Colors.white
+                      ),
+
+                      child:Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(height:5),
+                          Text(
+                            "Studying Classes", style: GoogleFonts.poppins(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold
+
+                          ),),
+                          SizedBox(height:5),
+                          Text(
+                            y1["admitclass"], style: GoogleFonts.poppins(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold
+
+                          ),),
+                        ],
+                      )
+                  ),
+                )
+
+
+
+
+
+
 
 
               ],
             );
 
 
-          } ),
-
-    );
+          } ),);
   }
 }

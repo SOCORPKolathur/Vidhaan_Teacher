@@ -1067,7 +1067,7 @@ class _ProfileState extends State<Profile> {
                   decoration: const BoxDecoration(
                       image: DecorationImage(
                         fit: BoxFit.cover,
-                          image: AssetImage("assets/Rectangle.png")
+                          image: AssetImage("assets/profile back.jpeg")
                       )
                   ),
                   child: Column(

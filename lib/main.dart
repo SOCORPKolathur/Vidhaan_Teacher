@@ -1,18 +1,18 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:easy_splash_screen/easy_splash_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'StudentAttendance_Page.dart';
+import 'Homepage2.dart';
+import 'Student_Landing_Page.dart';
 import 'account_page.dart';
-import 'demo.dart';
+import 'homepage.dart';
 
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-
        options: FirebaseOptions(
            apiKey: "AIzaSyAlSXyLVpxsmAQbvJqSHZTLWqEfDAG7o1M",
            authDomain: "raven-english-school.firebaseapp.com",
@@ -38,32 +38,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MyHomePage(),
-      /*EasySplashScreen(
-
-        logo: Image.asset("assets/1024.png"),
-        durationInSeconds: 4,
-        logoWidth: 100,
-        title: Text(
-          "Vidhaan", style: GoogleFonts.montserrat(color: Colors.white)
-        ),
-        backgroundColor: Color(0xffFEFCFF),
-        showLoader: true,
-        loaderColor: Color(0xff0A74CC),
-        loadingText: Text("Loading...",style: GoogleFonts.montserrat(color: Colors.white),),
-        navigator:FirebaseAuth.instance.currentUser!=null? Accountpage() :Homepage(),
-      ),*/
-
-      /*  SplashScreen(
-          seconds: 14,
-          navigateAfterSeconds:  FirebaseAuth.instance.currentUser!=null? Slidepage() :Homepage(),
-          title: Text("Vidhaan"),
-          image: Image.asset("assets/1024.png"),
-          backgroundColor: Color(0xffFEFCFF),
-          styleTextUnderTheLoader: new TextStyle(),
-          photoSize: 100.0,
-          loaderColor: Colors.red
-      ),*/
+      home: Intro_Page(),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -80,51 +55,33 @@ class _Intro_PageState extends State<Intro_Page> {
   
   @override
   void initState() {
-    
-    Future.delayed(Duration(milliseconds: 4200),(){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>Accountpage() ,));
-      
-    });
+    getdeviceid();
     // TODO: implement initState
     super.initState();
   }
+
+  getdeviceid()async{
+   if(FirebaseAuth.instance.currentUser!=null){
+     var getdate=await FirebaseFirestore.instance.collection('deviceid').where("id",isEqualTo: FirebaseAuth.instance.currentUser!.uid).where("type",isEqualTo:"Student" ).get();
+     var getdate2=await FirebaseFirestore.instance.collection('deviceid').where("id",isEqualTo: FirebaseAuth.instance.currentUser!.uid).where("type",isEqualTo:"Teacher" ).get();
+     if(getdate.docs.length>0){
+       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Student_landing_Page(),));
+     }
+     else if(getdate2.docs.length>0){
+       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Homepage(),));
+     }
+   }
+    else{
+      print("Login Page");
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Accountpage(),));
+    }
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    return Container();
 
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      body:
-      Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-
-          children: [
-
-            FadeOut(
-              duration: Duration(
-                milliseconds: 12000
-              ),
-              child: SlideInUp(
-                duration: Duration(milliseconds: 1600),
-                from: 700,
-                child: FadeOut(
-                  delay: Duration(milliseconds: 3850),
-                  child: Container(
-                  height: height/3.78,
-                    width:width/1.8,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("assets/VIDHAAN LOGO3.png")
-                      )
-                    ),
-          ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

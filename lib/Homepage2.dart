@@ -192,6 +192,7 @@ TextEditingController Searchcontroller=TextEditingController();
 
   final present = List<bool>.generate(1000, (int bool) => true, growable: true);
 
+  String page = "Home";
 
   int pageselected=0;
 
@@ -201,9 +202,9 @@ TextEditingController Searchcontroller=TextEditingController();
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       key: key,
-      backgroundColor: Color(0xff3D8CF8),
+      backgroundColor: Color(0xff0873C4),
      endDrawer: Drawer(
-       backgroundColor:Color(0xff2C79F1),
+       backgroundColor:Color(0xff0873C4),
 
        child: SingleChildScrollView(
          child: Column(      
@@ -464,7 +465,8 @@ TextEditingController Searchcontroller=TextEditingController();
           }
           return demo();
         },
-        child: SingleChildScrollView(
+        child:
+        SingleChildScrollView(
          physics: NeverScrollableScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -647,7 +649,7 @@ TextEditingController Searchcontroller=TextEditingController();
                             leftMargin: 20,
                             monthColor: Colors.white,
                             dayColor: Colors.white,
-                            activeDayColor: Color(0xff196EEF),
+                            activeDayColor: Color(0xff0873C4),
                             activeBackgroundDayColor: Colors.white,
                             dotsColor: Colors.white,
                             locale: 'en_ISO',
@@ -957,7 +959,7 @@ TextEditingController Searchcontroller=TextEditingController();
                                      child: Text(
                                        "Dashboard,",
                                        style: GoogleFonts.poppins(
-                                           color: Colors.blueAccent,
+                                           color:Color(0xff0873C4),
                                            fontSize: 22,
                                            fontWeight:
                                            FontWeight.w700),
@@ -1170,7 +1172,7 @@ TextEditingController Searchcontroller=TextEditingController();
                                             child: Text(
                                               "Circulars",
                                               style: GoogleFonts.poppins(
-                                                  color: Colors.blueAccent,
+                                                  color:Color(0xff0873C4),
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.w600),
                                             ),
@@ -1398,7 +1400,7 @@ TextEditingController Searchcontroller=TextEditingController();
                                                 child: Text(
                                                   "HomeWork",
                                                   style: GoogleFonts.poppins(
-                                                      color: Colors.blueAccent,
+                                                      color:Color(0xff0873C4),
                                                       fontSize: 18,
                                                       fontWeight:
                                                           FontWeight.w600),
@@ -2182,11 +2184,11 @@ TextEditingController Searchcontroller=TextEditingController();
                                                                                       width:
                                                                                       width / 10,
                                                                                       decoration:
-                                                                                      BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.blueAccent.shade700)),
+                                                                                      BoxDecoration(shape: BoxShape.circle, border: Border.all(color:Color(0xff0873C4))),
                                                                                       child: Container(
                                                                                         child: Icon(
                                                                                           present[index] == true ? Icons.check : null,
-                                                                                          color: Colors.blueAccent.shade700,
+                                                                                          color:Color(0xff0873C4),
                                                                                         ),
                                                                                       ),
                                                                                     ),
@@ -2920,7 +2922,7 @@ TextEditingController Searchcontroller=TextEditingController();
                                                                                           ),
                                                                                           Text(
                                                                                             "Free Hour",
-                                                                                            style: GoogleFonts.poppins(color: Colors.blueAccent, fontSize: 20, fontWeight: FontWeight.w600),
+                                                                                            style: GoogleFonts.poppins(color:Color(0xff0873C4), fontSize: 20, fontWeight: FontWeight.w600),
                                                                                           ),
                                                                                           Container(
                                                                                             margin: EdgeInsets.only(left:width/360,right:width/360),
@@ -2955,7 +2957,7 @@ TextEditingController Searchcontroller=TextEditingController();
                                                                                       padding: EdgeInsets.only(left: width/4.0),
                                                                                       child: Text(
                                                                                         "${values['class']}-${values['section']} Section",
-                                                                                        style: GoogleFonts.poppins(color: Colors.blueAccent, fontSize: 20, fontWeight: FontWeight.w600),
+                                                                                        style: GoogleFonts.poppins(color:Color(0xff0873C4), fontSize: 20, fontWeight: FontWeight.w600),
                                                                                       ),
                                                                                     ),
                                                                                   ),
@@ -3017,7 +3019,7 @@ TextEditingController Searchcontroller=TextEditingController();
                                                                                         values['period']==45? "6 HR":
                                                                                         values['period']==46? "7 HR":
                                                                                         values['period']==47? "8 HR":"",
-                                                                                        style: GoogleFonts.poppins(color: Colors.blueAccent, fontSize: 20, fontWeight: FontWeight.w600),
+                                                                                        style: GoogleFonts.poppins(color:Color(0xff0873C4), fontSize: 20, fontWeight: FontWeight.w600),
                                                                                       ),
                                                                                     ),
                                                                                   ),
@@ -3048,7 +3050,7 @@ TextEditingController Searchcontroller=TextEditingController();
                                                                                   child: Center(
                                                                                     child: Text(
                                                                                       "7th Grade C Section",
-                                                                                      style: GoogleFonts.poppins(color: Colors.blueAccent, fontSize: 20, fontWeight: FontWeight.w600),
+                                                                                      style: GoogleFonts.poppins(color:Color(0xff0873C4), fontSize: 20, fontWeight: FontWeight.w600),
                                                                                     ),
                                                                                   ),
                                                                                 ),
@@ -3064,7 +3066,7 @@ TextEditingController Searchcontroller=TextEditingController();
                                                                                 Center(
                                                                                   child: Text(
                                                                                     " 2 HR",
-                                                                                    style: GoogleFonts.poppins(color: Colors.blueAccent, fontSize: 20, fontWeight: FontWeight.w600),
+                                                                                    style: GoogleFonts.poppins(color:Color(0xff0873C4), fontSize: 20, fontWeight: FontWeight.w600),
                                                                                   ),
                                                                                 ),
                                                                               ),
@@ -3084,7 +3086,7 @@ TextEditingController Searchcontroller=TextEditingController();
                                                                                   child: Center(
                                                                                     child: Text(
                                                                                       "6th Grade A Section",
-                                                                                      style: GoogleFonts.poppins(color: Colors.blueAccent, fontSize: 20, fontWeight: FontWeight.w600),
+                                                                                      style: GoogleFonts.poppins(color:Color(0xff0873C4), fontSize: 20, fontWeight: FontWeight.w600),
                                                                                     ),
                                                                                   ),
                                                                                 ),
@@ -3100,7 +3102,7 @@ TextEditingController Searchcontroller=TextEditingController();
                                                                                 Center(
                                                                                   child: Text(
                                                                                     " 3 HR",
-                                                                                    style: GoogleFonts.poppins(color: Colors.blueAccent, fontSize: 20, fontWeight: FontWeight.w600),
+                                                                                    style: GoogleFonts.poppins(color:Color(0xff0873C4), fontSize: 20, fontWeight: FontWeight.w600),
                                                                                   ),
                                                                                 ),
                                                                               ),
@@ -3120,7 +3122,7 @@ TextEditingController Searchcontroller=TextEditingController();
                                                                                   child: Center(
                                                                                     child: Text(
                                                                                       "6th Grade B Section",
-                                                                                      style: GoogleFonts.poppins(color: Colors.blueAccent, fontSize: 20, fontWeight: FontWeight.w600),
+                                                                                      style: GoogleFonts.poppins(color:Color(0xff0873C4), fontSize: 20, fontWeight: FontWeight.w600),
                                                                                     ),
                                                                                   ),
                                                                                 ),
@@ -3136,7 +3138,7 @@ TextEditingController Searchcontroller=TextEditingController();
                                                                                 Center(
                                                                                   child: Text(
                                                                                     " 4 HR",
-                                                                                    style: GoogleFonts.poppins(color: Colors.blueAccent, fontSize: 20, fontWeight: FontWeight.w600),
+                                                                                    style: GoogleFonts.poppins(color:Color(0xff0873C4), fontSize: 20, fontWeight: FontWeight.w600),
                                                                                   ),
                                                                                 ),
                                                                               ),
@@ -3156,7 +3158,7 @@ TextEditingController Searchcontroller=TextEditingController();
                                                                                   child: Center(
                                                                                     child: Text(
                                                                                       "10th Grade D Section",
-                                                                                      style: GoogleFonts.poppins(color: Colors.blueAccent, fontSize: 20, fontWeight: FontWeight.w600),
+                                                                                      style: GoogleFonts.poppins(color:Color(0xff0873C4), fontSize: 20, fontWeight: FontWeight.w600),
                                                                                     ),
                                                                                   ),
                                                                                 ),
@@ -3172,7 +3174,7 @@ TextEditingController Searchcontroller=TextEditingController();
                                                                                 Center(
                                                                                   child: Text(
                                                                                     " 5 HR",
-                                                                                    style: GoogleFonts.poppins(color: Colors.blueAccent, fontSize: 20, fontWeight: FontWeight.w600),
+                                                                                    style: GoogleFonts.poppins(color:Color(0xff0873C4), fontSize: 20, fontWeight: FontWeight.w600),
                                                                                   ),
                                                                                 ),
                                                                               ),

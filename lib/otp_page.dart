@@ -6,14 +6,8 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:pinput/pinput.dart';
-
-
-
-
-import 'LandiongScreen_Page.dart';
 import 'RiveFilr.dart';
 import 'Student_Landing_Page.dart';
-import 'Student_Landing_screen.dart';
 import 'homepage.dart';
 
 class Otppage extends StatefulWidget {
@@ -274,7 +268,7 @@ class _OtppageState extends State<Otppage> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Color(0xff196EEF),
+                          Color(0xff0873C4),
                           Color(0xff3786F7),
                         ]
                       ),
@@ -296,8 +290,8 @@ class _OtppageState extends State<Otppage> {
                                   FirebaseFirestore.instance.collection("Staffs").doc(widget.staffid).update({
                                     "userid":FirebaseAuth.instance.currentUser!.uid,
                                   }),
-                                  FirebaseFirestore.instance.collection('deviceid').doc(_deviceId).set({
-                                                    "id":_deviceId.toString(),
+                                  FirebaseFirestore.instance.collection('deviceid').doc(FirebaseAuth.instance.currentUser!.uid).set({
+                                                    "id":FirebaseAuth.instance.currentUser!.uid,
                                                     "type":"Teacher",
                                                     }),
                                   Navigator.of(context).pushAndRemoveUntil(
@@ -307,8 +301,8 @@ class _OtppageState extends State<Otppage> {
                                   FirebaseFirestore.instance.collection("Students").doc(widget.staffid).update({
                                     "studentid":FirebaseAuth.instance.currentUser!.uid,
                                   }),
-                                  FirebaseFirestore.instance.collection('deviceid').doc(_deviceId).set({
-                                    "id":_deviceId.toString(),
+                                  FirebaseFirestore.instance.collection('deviceid').doc(FirebaseAuth.instance.currentUser!.uid).set({
+                                    "id":FirebaseAuth.instance.currentUser!.uid,
                                     "type":"Student",
                                   }),
                                   Navigator.of(context).pushAndRemoveUntil(

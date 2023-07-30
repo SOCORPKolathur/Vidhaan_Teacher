@@ -19,7 +19,8 @@ class _Student_homeworkState extends State<Student_homework> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder<dynamic>(
+      body:
+      FutureBuilder<dynamic>(
         future: FirebaseFirestore.instance.collection("Students").doc(widget.Studentid).get(),
         builder: (context, snapshot) {
           var value=snapshot.data!.data();
@@ -46,14 +47,7 @@ class _Student_homeworkState extends State<Student_homework> {
                  return ListView.builder(
                    itemCount: snapshot2.data!.docs.length,
                    itemBuilder: (context, index) {
-                     return Container(
-                         height:100,
-                         width: double.infinity,
-                         decoration: BoxDecoration(
-                           color: Color(0xff263646),
-                           borderRadius: BorderRadius.circular(5)
-                         ),
-                         child: Text(snapshot2.data!.docs[index]['des'],style: GoogleFonts.montserrat(color: Colors.white),));
+                     return Container();
 
                  },);
            },);

@@ -1,6 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +31,6 @@ class _AccountpageState extends State<Accountpage> {
 
   @override
   void initState() {
-    initPlatformState();
     setState(() {
       anim=true;
       hide=false;
@@ -42,37 +40,6 @@ class _AccountpageState extends State<Accountpage> {
     super.initState();
   }
   bool hide=false;
-
-  String _deviceId='';
-  Map<String, dynamic> _readWebBrowserInfo(WebBrowserInfo data) {
-    return <String, dynamic>{
-      'browserName': describeEnum(data.browserName),
-      'appCodeName': data.appCodeName,
-      'appName': data.appName,
-      'appVersion': data.appVersion,
-      'deviceMemory': data.deviceMemory,
-      'language': data.language,
-      'languages': data.languages,
-      'platform': data.platform,
-      'product': data.product,
-      'productSub': data.productSub,
-      'userAgent': data.userAgent,
-      'vendor': data.vendor,
-      'vendorSub': data.vendorSub,
-      'hardwareConcurrency': data.hardwareConcurrency,
-      'maxTouchPoints': data.maxTouchPoints,
-    };
-  }
-
-  static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
-
-  initPlatformState() async {
-    var  deviceId;
-    deviceId=_readWebBrowserInfo(await deviceInfoPlugin.webBrowserInfo);
-    print(deviceId);
-
-  }
-
 
 
   @override

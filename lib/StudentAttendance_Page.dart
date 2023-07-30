@@ -5,6 +5,7 @@ import 'package:flutter_calendar_carousel/classes/marked_date.dart';
 import 'package:flutter_calendar_carousel/classes/multiple_marked_dates.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show CalendarCarousel;
 import 'package:flutter_calendar_carousel/classes/event.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
 
@@ -99,7 +100,9 @@ class _StudentAttendance_PageState extends State<StudentAttendance_Page> {
               title: 'Present',
             ));
         markedDates.add(
-            MarkedDate(color: Colors.green, date: DateTime(Presntlist3[i], Presntlist2[i], Presntlist[i])));
+            MarkedDate(color: Colors.green,
+                  textStyle: GoogleFonts.poppins(fontWeight: FontWeight.w700),
+                date: DateTime(Presntlist3[i], Presntlist2[i], Presntlist[i])));
       });
 
     }
@@ -113,7 +116,9 @@ class _StudentAttendance_PageState extends State<StudentAttendance_Page> {
               title: 'Absent',
             ));
         markedDates.add(
-            MarkedDate(color: Colors.red, date: DateTime(absentlist3[j], absentlist2[j], absentlist[j])));
+            MarkedDate(color: Colors.red,
+                textStyle: GoogleFonts.poppins(fontWeight: FontWeight.w700),
+                date: DateTime(absentlist3[j], absentlist2[j], absentlist[j])));
 
       });
 
@@ -203,9 +208,18 @@ class _StudentAttendance_PageState extends State<StudentAttendance_Page> {
       daysHaveCircularBorder: true,
       showOnlyCurrentMonthDate: false,
       markedDateIconMargin: 2,
+daysTextStyle:
+GoogleFonts.poppins(fontWeight: FontWeight.w700,color: Colors.black),
+      inactiveWeekendTextStyle: GoogleFonts.poppins(fontWeight: FontWeight.w700),
+      weekdayTextStyle:  GoogleFonts.poppins(fontWeight: FontWeight.w700),
+      weekendTextStyle:  GoogleFonts.poppins(fontWeight: FontWeight.w700),
+      headerTextStyle:  GoogleFonts.poppins(fontWeight: FontWeight.w700),
+      nextDaysTextStyle:  GoogleFonts.poppins(fontWeight: FontWeight.w700,color: Colors.black),
+      markedDateMoreCustomTextStyle:  GoogleFonts.poppins(fontWeight: FontWeight.w700,color: Colors.black),
 
-      markedDateCustomTextStyle: TextStyle(
-          fontSize: 25,color:  Colors.white),
+      markedDateCustomTextStyle:  GoogleFonts.poppins(
+        fontWeight: FontWeight.w700,
+          color:  Colors.white),
       thisMonthDayBorderColor: Colors.grey,
       weekFormat: false,
 //      firstDayOfWeek: 4,
@@ -220,21 +234,25 @@ class _StudentAttendance_PageState extends State<StudentAttendance_Page> {
           side: BorderSide(color: Colors.yellow)),
 
       showHeader: false,
-      todayTextStyle: TextStyle(
+      todayTextStyle: GoogleFonts.poppins(
         color: Colors.blue,
+        fontWeight: FontWeight.w700
       ),
       todayButtonColor: Colors.indigo,
-      selectedDayTextStyle: TextStyle(
+      selectedDayTextStyle: GoogleFonts.poppins(
         color: Colors.yellow,
+          fontWeight: FontWeight.w700
       ),
       showWeekDays: false,
       minSelectedDate: _currentDate.subtract(Duration(days: 360)),
       maxSelectedDate: _currentDate.add(Duration(days: 360)),
-      prevDaysTextStyle: TextStyle(
+      prevDaysTextStyle:  GoogleFonts.poppins(
         fontSize: 16,
+        fontWeight: FontWeight.w700,
         color: Colors.pinkAccent,
       ),
-      inactiveDaysTextStyle: TextStyle(
+      inactiveDaysTextStyle:  GoogleFonts.poppins(
+        fontWeight: FontWeight.w700,
         color: Colors.tealAccent,
         fontSize: 16,
       ),
@@ -252,69 +270,68 @@ class _StudentAttendance_PageState extends State<StudentAttendance_Page> {
       ),
     );
 
-    return new Scaffold(
+    return SizedBox(
+      height:400,
+      child: new
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
 
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              //custom icon
+        children: <Widget>[
+          //custom icon
 
-              // This trailing comma makes auto-formatting nicer for build methods.
+          // This trailing comma makes auto-formatting nicer for build methods.
 
-              //custom icon without header
-              Container(
-                margin: EdgeInsets.only(
-                  top: 30.0,
-                  bottom: 16.0,
-                  left: 16.0,
-                  right: 16.0,
+          //custom icon without header
+          Container(
+            margin: EdgeInsets.only(
+              left: 16.0,
+              right: 16.0,
+            ),
+            child: new Row(
+              children: <Widget>[
+                Expanded(
+                    child: Text(
+                      _currentMonth,
+                        style: GoogleFonts.poppins(fontWeight: FontWeight.w700,
+                          fontSize: 24.0,)
+
+                    )),
+                TextButton(
+                  child: Text('PREV',style: GoogleFonts.poppins(fontWeight: FontWeight.w700)),
+                  onPressed: () {
+                    setState(() {
+                      _targetDateTime = DateTime(
+                          _targetDateTime.year, _targetDateTime.month - 1);
+                      _currentMonth =
+                          DateFormat.yMMM().format(_targetDateTime);
+                    });
+                  },
                 ),
-                child: new Row(
-                  children: <Widget>[
-                    Expanded(
-                        child: Text(
-                          _currentMonth,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24.0,
-                          ),
-                        )),
-                    TextButton(
-                      child: Text('PREV'),
-                      onPressed: () {
-                        setState(() {
-                          _targetDateTime = DateTime(
-                              _targetDateTime.year, _targetDateTime.month - 1);
-                          _currentMonth =
-                              DateFormat.yMMM().format(_targetDateTime);
-                        });
-                      },
-                    ),
-                    TextButton(
-                      child: Text('NEXT'),
-                      onPressed: () {
-                        setState(() {
-                          _targetDateTime = DateTime(
-                              _targetDateTime.year, _targetDateTime.month + 1);
-                          _currentMonth =
-                              DateFormat.yMMM().format(_targetDateTime);
-                        });
-                      },
-                    )
-                  ],
-                ),
-              ),
-
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 16.0),
-                child: _calendarCarouselNoHeader,
-              ), //
-
-            ],
+                TextButton(
+                  child: Text('NEXT',style: GoogleFonts.poppins(fontWeight: FontWeight.w700),),
+                  onPressed: () {
+                    setState(() {
+                      _targetDateTime = DateTime(
+                          _targetDateTime.year, _targetDateTime.month + 1);
+                      _currentMonth =
+                          DateFormat.yMMM().format(_targetDateTime);
+                    });
+                  },
+                )
+              ],
+            ),
           ),
-        ));
+
+          SizedBox
+            (
+            child: _calendarCarouselNoHeader,
+          ),
+
+
+
+        ],
+      ),
+    );
   }
 
 }
