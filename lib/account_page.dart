@@ -505,7 +505,6 @@ class _AccountpageState extends State<Accountpage> {
 
   String staffid="";
   int staffidlength=0;
-
   updatestaff() async {
     setState(() {
       studentid='';
